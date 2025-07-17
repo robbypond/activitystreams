@@ -1479,22 +1479,6 @@ public class ASObject
     }
     
     /**
-     * Set a property from a given callable
-     * @param key String
-     * @param value Callable<V>
-     * @return B 
-     **/
-    public B set(String key, Callable<?> value) {
-      try {
-        return value == null ?
-          (B)this : 
-          set(key,value.call());
-      } catch (Throwable t) {
-        throw propagate(t);
-      }
-    }
-    
-    /**
      * Set the scope
      * @param url String
      * @return B 
