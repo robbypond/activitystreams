@@ -26,47 +26,12 @@ package com.ibm.common.geojson;
  * @author james
  *
  */
-@SuppressWarnings("deprecation")
 public final class GeoMakers {
 
   private GeoMakers() {}
 
   public static Place.Builder place() {
     return new Place.Builder();
-  }
-  
-  /** @deprecated **/
-  public static AS1Position.Builder as1Position() {
-    return new AS1Position.Builder();
-  }
-  
-  /** @deprecated **/
-  public static AS1Position as1Position(
-    float latitude, 
-    float longitude, 
-    float altitude) {
-    return as1Position()
-      .longitude(longitude)
-      .latitude(latitude)
-      .altitude(altitude)
-      .get();
-  }
-  
-  /** @deprecated **/
-  public static AS1Position as1Position(
-    Position position) {
-      return as1Position(
-        position.northing(),
-        position.easting(),
-        position.altitude());
-  }
-  
-  public static Position position(
-    AS1Position position) {
-    return position(
-      position.latitude(), 
-      position.longitude(), 
-      position.altitude());
   }
   
   public static Address.Builder address() {
