@@ -28,13 +28,11 @@ import com.ibm.common.activitystreams.ASObject.AbstractBuilder;
 import com.ibm.common.activitystreams.internal.ASObjectAdapter;
 import com.ibm.common.activitystreams.internal.Model;
 import com.ibm.common.activitystreams.internal.Schema;
-import com.ibm.common.geojson.AS1Position;
 import com.ibm.common.geojson.Address;
 import com.ibm.common.geojson.GeoMakers;
 import com.ibm.common.geojson.Place;
 
-@SuppressWarnings("deprecation")
-public class GeoObjectAdapter 
+public class GeoObjectAdapter
   extends ASObjectAdapter {
 
   protected GeoObjectAdapter(Schema schema) {
@@ -42,7 +40,7 @@ public class GeoObjectAdapter
   }
 
   private static final ImmutableSet<? extends Type> knownTypes = 
-    ImmutableSet.of(Address.class,AS1Position.class,Place.class);
+    ImmutableSet.of(Address.class,Place.class);
 
   @Override
   protected boolean knowsType(Type type) {
@@ -57,8 +55,6 @@ public class GeoObjectAdapter
       return super.builderFor(type);
     if (type == Address.class) {
       return GeoMakers.address();
-    } else if (type == AS1Position.class) {
-      return GeoMakers.as1Position();
     } else if (type == Place.class) {
       return GeoMakers.place();
     } else return null;
@@ -72,10 +68,6 @@ public class GeoObjectAdapter
       return schema().forObjectClassOrType(
         Address.Builder.class,  
         "address");
-    } else if (type == AS1Position.class) {
-      return schema().forObjectClassOrType(
-        AS1Position.Builder.class, 
-        "position");
     } else if (type == Place.class) {
       return schema().forObjectClassOrType(
         Place.Builder.class, 

@@ -1,0 +1,8 @@
+
+allprojects {
+    tasks.withType(JavaCompile) {
+        sourceCompatibility = '17' // Replace with your desired Java version
+        targetCompatibility = '17' // Replace with your desired Java version
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
+}

@@ -62,7 +62,7 @@ public class Collection
   implements Serializable {
 
   /** Standardized Paging Links **/
-  public static enum Page {
+  public enum Page {
     /** 
      * Reference to the first page in the logical set 
      **/
@@ -80,11 +80,6 @@ public class Collection
      **/
     PREVIOUS,
     /** 
-     * Reference to the previous page in the logical set (treated as an alias for "previous")
-     * @deprecated Use Page.PREVIOUS instead
-     **/
-    PREV,
-    /** 
      * Reference to the page containing the most recently published/updated 
      * items in the logical set 
      **/
@@ -101,9 +96,9 @@ public class Collection
     
     private String checkPrev(Collection col, String or) {
       if (this == PREVIOUS) {
-        if (!col.has(label) && col.has(PREV.label))
-          return PREV.label;
-      } else if (this == PREV) {
+        if (!col.has(label) && col.has(PREVIOUS.label))
+          return PREVIOUS.label;
+      } else if (this == PREVIOUS) {
         if (!col.has(label) && col.has(PREVIOUS.label))
           return PREVIOUS.label;
       }

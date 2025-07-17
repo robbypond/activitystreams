@@ -27,7 +27,6 @@ import com.ibm.common.activitystreams.internal.Model;
 import com.ibm.common.activitystreams.internal.Schema;
 import com.ibm.common.activitystreams.internal.Schema.Builder;
 import com.ibm.common.activitystreams.util.Module;
-import com.ibm.common.geojson.AS1Position;
 import com.ibm.common.geojson.Address;
 import com.ibm.common.geojson.GeoObject;
 import com.ibm.common.geojson.Place;
@@ -47,8 +46,7 @@ import com.ibm.common.geojson.Place;
  * @author james
  *
  */
-@SuppressWarnings("deprecation")
-public final class GeoModule 
+public final class GeoModule
   implements Module {
 
   public static final Module instance = 
@@ -59,7 +57,6 @@ public final class GeoModule
     .type(Place.class, Place.Builder.class)
     .as("geo", GeoObject.class)
     .as("address", Address.class)
-    .as("position", AS1Position.class)
     .get();
   
   public static final Model address = 
@@ -74,21 +71,11 @@ public final class GeoModule
         "streetAddress")
       .get();
   
-  public static final Model as1Position = 
-    Schema.object.template()
-      .type(AS1Position.class, AS1Position.Builder.class)
-      .floatValue(
-        "latitude", 
-        "longitude", 
-        "altitude")
-      .get();
-  
   @Override
   public void apply(
     Builder builder) {
       builder.map("place", place)
-             .map("address", address)
-             .map("position", as1Position);
+             .map("address", address);
   }
 
   @Override
@@ -101,7 +88,6 @@ public final class GeoModule
       new GeoAdapter();
     builder.hierarchicalAdapter(Place.class, base)
            .hierarchicalAdapter(Address.class, base)
-           .hierarchicalAdapter(AS1Position.class, base)
            .hierarchicalAdapter(GeoObject.class, geo)
            .hierarchicalAdapter(
              GeoObject.Type.class, 

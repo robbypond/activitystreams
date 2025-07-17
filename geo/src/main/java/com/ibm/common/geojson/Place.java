@@ -63,41 +63,6 @@ public final class Place extends ASObject {
     }
     
     /**
-     * Set the position 
-     * @deprecated
-     * @param position AS1Position
-     * @return Builder
-     */
-    public Builder position(AS1Position position) {
-      return set("position", position);
-    }
-    
-    /**
-     * Set the position
-     * @deprecated 
-     * @param position Supplier&lt;AS1Position>
-     * @return Builder
-     */
-    public Builder position(Supplier<AS1Position> position) {
-      return position(position.get());
-    }
-    
-    /**
-     * Set the position
-     * @param latitude float
-     * @param longitude float
-     * @param altitude float
-     * @return Builder
-     * @deprecated
-     */
-    public Builder position(
-      float latitude, 
-      float longitude, 
-      float altitude) {
-      return position(GeoMakers.as1Position(latitude, longitude, altitude));
-    }
-    
-    /**
      * Set the geo property
      * @param geo GeoObject&lt;?> Any GeoJSON object can be used
      * @return Builder
@@ -133,16 +98,7 @@ public final class Place extends ASObject {
   public Address address() {
     return this.<Address>get("address");
   }
-  
-  /**
-   * Get the position
-   * @deprecated
-   * @return AS1Position
-   */
-  public AS1Position position() {
-    return this.<AS1Position>get("position");
-  }
-  
+
   /**
    * Get the geo property
    * @return &lt;G extends GeoObject&lt;?>>G
