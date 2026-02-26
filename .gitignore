@@ -6,3 +6,8 @@ target
 */.classpath
 */.project
 */.settings
+/.gradle/
+/.idea/
+*/build
+bin
+build/

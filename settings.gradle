@@ -1,0 +1,2 @@
+rootProject.name = 'activitystreams'
+include 'core', 'actions', 'geo', 'legacy', 'typext', 'assembly'
