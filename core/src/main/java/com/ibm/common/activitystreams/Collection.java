@@ -83,7 +83,7 @@ public class Collection
      * Reference to the previous page in the logical set (treated as an alias for "previous")
      * @deprecated Use Page.PREVIOUS instead
      **/
-    PREV,
+    @Deprecated PREV,
     /** 
      * Reference to the page containing the most recently published/updated 
      * items in the logical set 
