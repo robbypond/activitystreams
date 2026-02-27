@@ -29,7 +29,6 @@ import static com.ibm.common.activitystreams.internal.Adapters.TABLE;
 import static com.ibm.common.activitystreams.internal.Adapters.OPTIONAL;
 import static com.ibm.common.activitystreams.internal.Adapters.ACTIONS;
 import static com.ibm.common.activitystreams.internal.Adapters.DURATION;
-import static com.ibm.common.activitystreams.internal.Adapters.INTERVAL;
 import static com.ibm.common.activitystreams.internal.Adapters.ITERABLE;
 import static com.ibm.common.activitystreams.internal.Adapters.MIMETYPE;
 import static com.ibm.common.activitystreams.internal.Adapters.MULTIMAP;
@@ -44,12 +43,11 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.time.Duration;
+import java.time.Period;
+import java.time.ZonedDateTime;
 import java.util.Date;
-
-import org.joda.time.DateTime;
-import org.joda.time.ReadableDuration;
-import org.joda.time.ReadableInterval;
-import org.joda.time.ReadablePeriod;
+import java.util.Objects;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
@@ -248,16 +246,15 @@ public final class GsonWrapper {
     .registerTypeHierarchyAdapter(Table.class, TABLE)
     .registerTypeHierarchyAdapter(LazilyParsedNumber.class, NUMBER)
     .registerTypeHierarchyAdapter(LazilyParsedNumberComparable.class, NUMBER)
-    .registerTypeHierarchyAdapter(ReadableDuration.class, DURATION)
-    .registerTypeHierarchyAdapter(ReadablePeriod.class, PERIOD)
-    .registerTypeHierarchyAdapter(ReadableInterval.class, INTERVAL)
+    .registerTypeHierarchyAdapter(Duration.class, DURATION)
+    .registerTypeHierarchyAdapter(Period.class, PERIOD)
     .registerTypeAdapter(
       Activity.Status.class, 
       forEnum(
         Activity.Status.class, 
         Activity.Status.OTHER))
     .registerTypeAdapter(Date.class, DATE)
-    .registerTypeAdapter(DateTime.class, DATETIME)
+    .registerTypeAdapter(ZonedDateTime.class, DATETIME)
     .registerTypeAdapter(MediaType.class, MIMETYPE)
     .registerTypeHierarchyAdapter(Multimap.class, MULTIMAP);
     
@@ -337,5 +334,35 @@ public final class GsonWrapper {
    * @return A */
   public <A extends ASObject>A readAs(Reader in, Class<? extends A> type) {
     return (A)gson.fromJson(in, type);
+  }
+
+  private static class LazilyParsedNumberComparable implements Comparable<LazilyParsedNumberComparable> {
+    private final LazilyParsedNumber number;
+
+    public LazilyParsedNumberComparable(LazilyParsedNumber number) {
+        this.number = number;
+    }
+
+    public double doubleValue() {
+        return number.doubleValue();
+    }
+
+    @Override
+    public int compareTo(LazilyParsedNumberComparable o) {
+        return Double.compare(this.doubleValue(), o.doubleValue());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LazilyParsedNumberComparable that = (LazilyParsedNumberComparable) o;
+        return Objects.equals(number, that.number);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(number);
+    }
   }
 }

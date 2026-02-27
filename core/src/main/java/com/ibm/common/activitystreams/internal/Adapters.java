@@ -30,14 +30,14 @@ import static com.ibm.common.activitystreams.Makers.linkValues;
 import static com.ibm.common.activitystreams.internal.ASObjectAdapter.primConverter;
 
 import java.lang.reflect.Type;
+import java.time.Duration;
+import java.time.Period;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Map;
-
-import org.joda.time.DateTime;
-import org.joda.time.Duration;
-import org.joda.time.Interval;
-import org.joda.time.Period;
-import org.joda.time.format.ISODateTimeFormat;
+import java.util.Objects;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
@@ -141,20 +141,20 @@ final class Adapters {
   static final Adapter<Date> DATE = 
     new SimpleAdapter<Date>() {
       protected String serialize(Date t) {
-        return ISODateTimeFormat.dateTime().print(new DateTime(t));
+        return DateTimeFormatter.ISO_ZONED_DATE_TIME.format(t.toInstant().atZone(ZoneId.systemDefault()));
       }
       public Date apply(String v) {
-        return DateTime.parse(v).toDate();
+        return Date.from(ZonedDateTime.parse(v).toInstant());
       }
     };
   
-  static final Adapter<DateTime> DATETIME =
-    new SimpleAdapter<DateTime>() {
-      protected String serialize(DateTime t) {
-        return ISODateTimeFormat.dateTime().print(t);
+  static final Adapter<ZonedDateTime> DATETIME =
+    new SimpleAdapter<ZonedDateTime>() {
+      protected String serialize(ZonedDateTime t) {
+        return DateTimeFormatter.ISO_ZONED_DATE_TIME.format(t);
       }
-      public DateTime apply(String v) {
-        return DateTime.parse(v);
+      public ZonedDateTime apply(String v) {
+        return ZonedDateTime.parse(v);
       }
     };
   
@@ -171,13 +171,6 @@ final class Adapters {
         return Period.parse(v);
       }
   };
-
-  static final Adapter<Interval> INTERVAL =
-    new SimpleAdapter<Interval>() {
-      public Interval apply(String v) {
-        return Interval.parse(v);
-      }
-    };
   
   static final Adapter<MediaType> MIMETYPE =
     new SimpleAdapter<MediaType>() {
@@ -251,7 +244,7 @@ final class Adapters {
     
     private BoundType bt(JsonPrimitive p) {
       try {
-        return BoundType.valueOf(p.toString());
+        return BoundType.valueOf(p.getAsString().toUpperCase());
       } catch (Throwable t) {
         return BoundType.CLOSED;
       }
@@ -333,4 +326,55 @@ final class Adapters {
     }
 
   };
+
+  private static class LazilyParsedNumberComparable extends Number implements Comparable<LazilyParsedNumberComparable> {
+    private final LazilyParsedNumber number;
+
+    public LazilyParsedNumberComparable(LazilyParsedNumber number) {
+        this.number = number;
+    }
+
+    @Override
+    public int intValue() {
+        return number.intValue();
+    }
+
+    @Override
+    public long longValue() {
+        return number.longValue();
+    }
+
+    @Override
+    public float floatValue() {
+        return number.floatValue();
+    }
+
+    @Override
+    public double doubleValue() {
+        return number.doubleValue();
+    }
+
+    @Override
+    public String toString() {
+        return number.toString();
+    }
+
+    @Override
+    public int compareTo(LazilyParsedNumberComparable o) {
+        return Double.compare(this.doubleValue(), o.doubleValue());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LazilyParsedNumberComparable that = (LazilyParsedNumberComparable) o;
+        return Objects.equals(number, that.number);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(number);
+    }
+  }
 }

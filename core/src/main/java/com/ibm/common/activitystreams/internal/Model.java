@@ -21,12 +21,10 @@
  */
 package com.ibm.common.activitystreams.internal;
 import java.lang.reflect.Type;
+import java.time.Duration;
+import java.time.Period;
+import java.time.ZonedDateTime;
 import java.util.Map;
-
-import org.joda.time.DateTime;
-import org.joda.time.ReadableDuration;
-import org.joda.time.ReadableInterval;
-import org.joda.time.ReadablePeriod;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Supplier;
@@ -286,7 +284,7 @@ public final class Model {
      * @return Builder 
      **/
     public Builder dateTime(String name) {
-      return as(name, DateTime.class);
+      return as(name, ZonedDateTime.class);
     }
     
     /**
@@ -306,7 +304,7 @@ public final class Model {
      * @return Builder
      */
     public Builder duration(String name) {
-      return as(name, ReadableDuration.class);
+      return as(name, Duration.class);
     }
     
     /**
@@ -326,7 +324,7 @@ public final class Model {
      * @return Builder
      */
     public Builder period(String name) {
-      return as (name, ReadablePeriod.class);
+      return as (name, Period.class);
     }
     
     /**
@@ -338,15 +336,6 @@ public final class Model {
       for (String name: names)
         period(name);
       return this;
-    }
-    
-    /**
-     * Method interval.
-     * @param name String
-     * @return Builder
-     */
-    public Builder interval(String name) {
-      return as(name, ReadableInterval.class);
     }
     
     /**

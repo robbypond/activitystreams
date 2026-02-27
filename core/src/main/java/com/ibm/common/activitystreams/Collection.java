@@ -27,11 +27,10 @@ import static com.google.common.collect.Iterables.filter;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.Period;
+import java.time.ZonedDateTime;
 import java.util.concurrent.TimeUnit;
-
-import org.joda.time.DateTime;
-import org.joda.time.ReadableDuration;
-import org.joda.time.ReadablePeriod;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
@@ -265,10 +264,10 @@ public class Collection
     
     /**
      * Specify that the collection contains items updated after the specified time
-     * @param dt DateTime
+     * @param dt ZonedDateTime
      * @return B 
      **/
-    public B itemsAfter(DateTime dt) {
+    public B itemsAfter(ZonedDateTime dt) {
       return _dt("itemsAfter", dt);
     }
     
@@ -285,7 +284,7 @@ public class Collection
      * @param duration Duration
      * @return B 
      */
-    public B itemsAfterFromNow(ReadableDuration duration) {
+    public B itemsAfterFromNow(Duration duration) {
       return _dtFromNow("itemsAfter", duration);
     }
     
@@ -294,7 +293,7 @@ public class Collection
      * @param period
      * @return B
      */
-    public B itemsAfterFromNow(ReadablePeriod period) {
+    public B itemsAfterFromNow(Period period) {
       return _dtFromNow("itemsAfter", period);
     }
     
@@ -310,10 +309,10 @@ public class Collection
     
     /**
      * Specify that the collection contains items updated before a specific time
-     * @param dt DateTime
+     * @param dt ZonedDateTime
      * @return B 
      **/
-    public B itemsBefore(DateTime dt) {
+    public B itemsBefore(ZonedDateTime dt) {
       return _dt("itemsBefore", dt);
     }
     
@@ -331,7 +330,7 @@ public class Collection
      * @param duration Duration
      * @return B 
      */
-    public B itemsBeforeFromNow(ReadableDuration duration) {
+    public B itemsBeforeFromNow(Duration duration) {
       return _dtFromNow("itemsBefore", duration);
     }
     
@@ -341,7 +340,7 @@ public class Collection
      * @param period
      * @return B
      */
-    public B itemsBeforeFromNow(ReadablePeriod period) {
+    public B itemsBeforeFromNow(Period period) {
       return _dtFromNow("itemsBefore", period);
     }
     
@@ -411,18 +410,18 @@ public class Collection
   /**
    * If not null, indicates that the collection only contains items
    * updated after the given instant 
-   * @return DateTime 
+   * @return ZonedDateTime 
    **/
-  public DateTime itemsAfter() {
+  public ZonedDateTime itemsAfter() {
     return this.getDateTime("itemsAfter");
   }
   
   /**
    * If not null, indicates that the collection only contains items
    * updated before the given instant
-   * @return DateTime 
+   * @return ZonedDateTime 
    * */
-  public DateTime itemsBefore() {
+  public ZonedDateTime itemsBefore() {
     return this.getDateTime("itemsBefore");
   }
   
