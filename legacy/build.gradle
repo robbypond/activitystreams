@@ -2,5 +2,4 @@ dependencies {
     implementation project(':core')
     implementation 'com.google.code.gson:gson:2.2.4'
     implementation 'com.google.guava:guava:16.0.1'
-    implementation 'joda-time:joda-time:2.3'
 }

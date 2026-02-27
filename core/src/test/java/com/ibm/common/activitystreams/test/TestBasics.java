@@ -28,9 +28,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.time.ZonedDateTime;
 
-import org.joda.time.DateTime;
-import org.joda.time.Period;
 import org.junit.Test;
 
 import com.google.common.collect.Iterables;
@@ -94,13 +93,13 @@ public final class TestBasics {
   
   @Test
   public void testDateTimes() {
-    DateTime now = DateTime.now();
+    ZonedDateTime now = ZonedDateTime.now();
     ASObject obj = 
       Makers.object()
         .updated(now)
         .published(now)
-        .startTime(now.minus(Period.days(1)))
-        .endTime(now.plus(Period.days(1)))
+        .startTime(now.minusDays(1))
+        .endTime(now.plusDays(1))
         .get();
     assertNotNull(obj.updated());
     assertNotNull(obj.published());

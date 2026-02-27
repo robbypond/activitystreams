@@ -24,10 +24,9 @@ package com.ibm.common.activitystreams.legacy;
 import static com.google.common.collect.Iterables.transform;
 
 import java.io.ObjectStreamException;
-
-import org.joda.time.DateTime;
-import org.joda.time.ReadableDuration;
-import org.joda.time.ReadablePeriod;
+import java.time.Duration;
+import java.time.Period;
+import java.time.ZonedDateTime;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -187,10 +186,10 @@ public class Task
     
     /**
      * Specifies the due date for this task
-     * @param dt DateTime
+     * @param dt ZonedDateTime
      * @return Builder
      */
-    public Builder by(DateTime dt) {
+    public Builder by(ZonedDateTime dt) {
       return this._dt("by", dt);
     }
     
@@ -205,42 +204,42 @@ public class Task
     /**
      * Specifies the due date for this task in terms of a specific
      * duration of time from right now
-     * @param duration ReadableDuration
+     * @param duration Duration
      * @return Builder
      */
-    public Builder byFromNow(ReadableDuration duration) {
+    public Builder byFromNow(Duration duration) {
       return this._dtFromNow("by", duration);
     }
     
     /**
      * Specifies the due date for this task in terms of a specific
      * period of time from right now
-     * @param period ReadablePeriod
+     * @param period Period
      * @return Builder
      */
-    public Builder byFromNow(ReadablePeriod period) {
+    public Builder byFromNow(Period period) {
       return this._dtFromNow("by", period);
     }
     
     /**
      * Specifies the due date for this task in terms of a specific
      * duration of time from the given instant;
-     * @param dt DateTime
-     * @param duration ReadableDuration
+     * @param dt ZonedDateTime
+     * @param duration Duration
      * @return Builder
      */
-    public Builder by(DateTime dt, ReadableDuration duration) {
+    public Builder by(ZonedDateTime dt, Duration duration) {
       return this._dtFrom("by", dt, duration);
     }
     
     /**
      * Specifies the due date for this task in terms of a specific
      * period of time from the given instant
-     * @param dt DateTime
-     * @param period ReadablePeriod
+     * @param dt ZonedDateTime
+     * @param period Period
      * @return Builder
      */
-    public Builder by(DateTime dt, ReadablePeriod period) {
+    public Builder by(ZonedDateTime dt, Period period) {
       return this._dtFrom("by", dt, period);
     }
     
@@ -275,9 +274,9 @@ public class Task
   
   /**
    * Get the due date
-   * @return DateTime
+   * @return ZonedDateTime
    */
-  public DateTime by() {
+  public ZonedDateTime by() {
     return getDateTime("by");
   }
   

@@ -26,20 +26,19 @@ import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.fromNullable;
 import static com.google.common.base.Optional.of;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.joda.time.Duration.millis;
-import static org.joda.time.Duration.standardDays;
-import static org.joda.time.Duration.standardHours;
-import static org.joda.time.Duration.standardMinutes;
-import static org.joda.time.Duration.standardSeconds;
+import static java.time.Duration.ofMillis;
+import static java.time.Duration.ofDays;
+import static java.time.Duration.ofHours;
+import static java.time.Duration.ofMinutes;
+import static java.time.Duration.ofSeconds;
 
+import java.time.ZonedDateTime;
+import java.time.Duration;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
-import org.joda.time.DateTime;
-import org.joda.time.Duration;
-import org.joda.time.Interval;
-import org.joda.time.Period;
 
 import com.google.common.base.Converter;
 import com.google.common.base.Function;
@@ -62,22 +61,27 @@ public final class Converters {
   public static Duration toDuration(long v, TimeUnit unit) {
     switch(unit) {
     case NANOSECONDS:
-      return millis(v / 1000 / 1000);
+      return ofMillis(v / 1000 / 1000);
     case MICROSECONDS:
-      return millis(v / 1000);
+      return ofMillis(v / 1000);
     case MILLISECONDS:
-      return millis(v);
+      return ofMillis(v);
     case SECONDS:
-      return standardSeconds(v);
+      return ofSeconds(v);
     case MINUTES:
-      return standardMinutes(v);
+      return ofMinutes(v);
     case HOURS:
-      return standardHours(v);
+      return ofHours(v);
     case DAYS:
-      return standardDays(v);
+      return ofDays(v);
     default:
       throw new IllegalArgumentException();
     }
+  }
+
+  public static Duration toDuration(Period period) {
+    ZonedDateTime now = ZonedDateTime.now();
+    return Duration.between(now, now.plus(period));
   }
   
   /**
@@ -109,11 +113,11 @@ public final class Converters {
   /**
    * Method tryParseDateTime.
    * @param input String
-   * @return DateTime
+   * @return ZonedDateTime
    */
-  private static DateTime tryParseDateTime(String input) {
+  private static ZonedDateTime tryParseDateTime(String input) {
     try {
-      return DateTime.parse(input);
+      return ZonedDateTime.parse(input);
     } catch (Throwable t) {
       return null;
     }
@@ -126,9 +130,14 @@ public final class Converters {
    */
   private static Duration tryParseDuration(String input) {
     try {
-      return Period.parse(input).toDurationFrom(DateTime.now());
+      return Duration.parse(input);
     } catch (Throwable t) {
-      return null;
+      try {
+        Period p = Period.parse(input);
+        return toDuration(p);
+      } catch (Throwable t2) {
+        return null;
+      }
     }
   }
   
@@ -145,32 +154,6 @@ public final class Converters {
     }
   }
   
-  /**
-   * Method tryParseInterval.
-   * @param input String
-   * @return Interval
-   */
-  private static Interval tryParseInterval(String input) {
-    try {
-      return Interval.parse(input);
-    } catch (Throwable t) {
-      return null;
-    }
-  }
-
-  public static final Function<Object,Optional<Interval>> toInterval =
-      new Function<Object,Optional<Interval>>() {
-        public Optional<Interval> apply(Object input) {
-          Optional<Interval> ret = absent();
-          if (input != null) 
-            ret = input instanceof Interval ?
-              of((Interval)input) :
-                  fromNullable(tryParseInterval(input.toString()));
-          return ret;
-        }
-      
-    };
-  
   public static final Function<Object,Optional<Duration>> toDuration =
     new Function<Object,Optional<Duration>>() {
 
@@ -180,7 +163,7 @@ public final class Converters {
           ret = input instanceof Duration ?
             of((Duration)input) :
               input instanceof Number ?
-                of(standardSeconds(((Number)input).longValue())) :
+                of(ofSeconds(((Number)input).longValue())) :
                 fromNullable(tryParseDuration(input.toString()));
         return ret;
       }
@@ -199,17 +182,17 @@ public final class Converters {
     }
     };
   
-  public static final Function<Object,Optional<DateTime>> toDateTime =
-    new Function<Object,Optional<DateTime>>() {
-      public Optional<DateTime> apply(Object input) {
-        Optional<DateTime> ret = absent();
+  public static final Function<Object,Optional<ZonedDateTime>> toDateTime =
+    new Function<Object,Optional<ZonedDateTime>>() {
+      public Optional<ZonedDateTime> apply(Object input) {
+        Optional<ZonedDateTime> ret = absent();
         if (input != null)
-          ret = input instanceof DateTime ?
-            of((DateTime)input) :
+          ret = input instanceof ZonedDateTime ?
+            of((ZonedDateTime)input) :
             input instanceof Date ?
-              of(new DateTime((Date)input)) :
+              of(((Date)input).toInstant().atZone(ZoneId.systemDefault())) :
                 input instanceof Number ?
-                  of(new DateTime(((Number)input).longValue())) :
+                  of(new Date(((Number)input).longValue()).toInstant().atZone(ZoneId.systemDefault())) :
                   fromNullable(tryParseDateTime(input.toString()));
         return ret;
       }
